@@ -1,0 +1,20 @@
+// Key Pair Name
+key_pair = "my-keypair"
+
+// Subnet / Firewall IP Configuration
+management_CIDR = "10.0.3.0/24"
+management_IP   = "10.0.3.10"
+private_CIDR    = "10.0.1.0/24"
+private_IP      = "10.0.1.10"
+public_CIDR     = "10.0.0.0/24"
+public_IP       = "10.0.0.10"
+
+// AWS Region
+region = "us-east-1"
+
+// VPC Configuration
+vpc_name = "my-vpc"
+vpc_CIDR = "10.0.0.0/22"
+
+// ASA version  9.12(2)
+ami_id = "ami-01b0bfec54ba93d12"
