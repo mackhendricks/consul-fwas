@@ -45,6 +45,8 @@ def initApp(flask_app):
         # Overvide settings if Environment settings are defined
         settings.CONSUL_HOST = os.getenv('CONSUL_HOST', settings.CONSUL_HOST)
         settings.CONSUL_PORT = os.getenv('CONSUL_HOST', settings.CONSUL_PORT)
+        settings.APP_HOST = os.getenv('APP_HOST', settings.APP_HOST)
+        settings.APP_PORT = os.getenv('APP_PORT', settings.APP_PORT)
 
 
         app_manager = Manager(flask_app, with_default_commands=False)
