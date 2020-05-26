@@ -10,4 +10,4 @@ runcmd:
 - cd /opt
 - git clone https://github.com/kecorbin/terraform-aws-asav faas -b feature/ui
 - cd faas/ui
-- CONSUL_HOST=${userdata_consul_faas_mgmt_IP} nohup ./deploy.sh &
+- CONSUL_HOST=${userdata_consul_faas_mgmt_IP} APP_HOST=${userdata_consul_faas_mgmt_IP} nohup ./deploy.sh &
