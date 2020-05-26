@@ -1,5 +1,9 @@
 // Key Pair Name
-key_pair = "my-keypair"
+key_pair = "mack-deployer-key"
+
+// Public Key
+public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCy2Pjtkq0/4rJPTW1+GKJuTV2EILN0V35gxuNtnH412LRSUpcacPXuiFE2FdqrdjQ8RruDpIWeVFCkD0t7ivpSMXLxtvHQPOT5cMs1eKgAQ+wIeFPG0WlbpLLKWRdxfntp6LtvfzQzWk2NIahuO1TIYDbjCXsxuDTx0ZEew4ZjMInC8SxwxoaPOF8a99TsiGBNscLvs0cKgp1RXg6UlQBggAq8vwwyFUVUKr7CswL8AXTIepqSAaXtM5IOMu/cOkei1Qwz8XrdcVgfkMIZwq23VNJjYkE5juHGTxnL4EpOogwRj8XGQMmJ7Q2rs2fgWLcUKDcbyka89q4a97HlY2Il mack@hashicorp.com"
+
 
 // Subnet / Firewall IP Configuration
 management_CIDR = "10.0.3.0/24"
@@ -8,6 +12,9 @@ private_CIDR    = "10.0.1.0/24"
 private_IP      = "10.0.1.10"
 public_CIDR     = "10.0.0.0/24"
 public_IP       = "10.0.0.10"
+
+// Consul Server and FaaS IP configuration
+consul_faas_mgmt_IP = "10.0.3.11"
 
 // AWS Region
 region = "us-east-1"
