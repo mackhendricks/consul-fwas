@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, abort, flash
 from flask_script import Manager, Server
-import settings, pprint
+import settings, pprint, os
 import consul
 
 app = Flask(__name__, static_folder="./static", static_url_path="/static")
@@ -41,6 +41,11 @@ def initApp(flask_app):
         # Customer Jinga filters
 
         flask_app.jinja_env.filters["imgFilter"] = imgFilter
+
+        # Overvide settings if Environment settings are defined
+        settings.CONSUL_HOST = os.getenv('CONSUL_HOST', settings.CONSUL_HOST)
+        settings.CONSUL_PORT = os.getenv('CONSUL_HOST', settings.CONSUL_PORT)
+
 
         app_manager = Manager(flask_app, with_default_commands=False)
         app_manager.add_command('runserver', CustomServer())
