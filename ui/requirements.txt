@@ -1,0 +1,7 @@
+python-consul
+Flask
+Flask_Script
+PyMySQL
+requests
+SQLAlchemy
+Werkzeug

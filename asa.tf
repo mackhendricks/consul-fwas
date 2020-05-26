@@ -64,8 +64,8 @@ resource "aws_instance" "ASAv" {
   key_name      = var.key_pair
   user_data     = data.template_file.asa_config.rendered
   tags = {
-    Name  = "kcorbin-cisco-asav"
-    owner = "kcorbin"
+    Name  = "${var.owner}-cisco-asav"
+    owner = "var.owner"
   }
 
   network_interface {
