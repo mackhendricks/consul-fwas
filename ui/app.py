@@ -23,7 +23,7 @@ def index():
     pprint.pprint(partners)
     addPartnerAccess("service2",["access_partnerA"])
     generateAccessRules("partnerA")
-    return render_template('faas.html')
+    return render_template('fwaas.html', partners=settings.PARTNERS)
 
 def imgFilter(name):
     images_url = urllib.parse.urljoin(app.static_url_path, 'images')
@@ -48,19 +48,14 @@ def initApp(flask_app):
         settings.APP_HOST = os.getenv('APP_HOST', settings.APP_HOST)
         settings.APP_PORT = os.getenv('APP_PORT', settings.APP_PORT)
 
+        # configs depending on updated settings go here
+        flask_app.env = "development" if settings.DEBUG else "production"
+        flask_app.debug = settings.DEBUG
 
         app_manager = Manager(flask_app, with_default_commands=False)
         app_manager.add_command('runserver', CustomServer())
         app_manager.run()
 
-        if settings.DEBUG == True:
-            self.use_debugger = True
-            self.use_reloader = True
-        else:
-            self.use_debugger = None
-            self.use_reloader = None
-            self.threaded = True
-            self.processes = 1
 
     except Exception as ex:
         print(ex)
@@ -70,7 +65,7 @@ def teardown():
 
 def getConsulServices(partner=None):
     """ Returns a list of services. Only returns the services assigned to a partner if the partner name is provided """
-    try:    
+    try:
         c = consul.Consul(host=settings.CONSUL_HOST,port=settings.CONSUL_PORT)
         if c is not None:
             services = c.catalog.services()
@@ -85,7 +80,7 @@ def getConsulServices(partner=None):
 
 def getConsulNodes(service=None):
     """ Returns the ip/port of nodes that contains the service """
-    
+
     targets = []
     c = consul.Consul(host=settings.CONSUL_HOST,port=settings.CONSUL_PORT)
     nodes = c.catalog.service(service)
@@ -94,7 +89,7 @@ def getConsulNodes(service=None):
         target_info["ip"] = node["Address"]
         target_info["port"] = node["ServicePort"]
         targets.append(target_info)
-    
+
     pprint.pprint(targets)
     return targets
 
@@ -130,7 +125,7 @@ def generateAccessRules(partner_name = None):
             rules.append(rule)
 
         content = render_template('access_rule.tf', rules=rules,interface="management",partner_name=rule["partner_name"])
-        filename = "{}/access_{}.tf".format(settings.TF_RULE_DIR,partner_name) 
+        filename = "{}/access_{}.tf".format(settings.TF_RULE_DIR,partner_name)
         file = open(filename, 'w')
         file.write(content)
         file.close()

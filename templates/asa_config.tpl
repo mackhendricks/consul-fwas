@@ -1,11 +1,23 @@
 ! ASA Version 9.12(2)
 !
-hostname kcorbin-asa
+hostname ${userdata_owner}
 enable password cisco
 
 interface management0/0
 management-only
 nameif management
+security-level 100
+ip address dhcp setroute
+no shut
+!
+interface ethernet0/0
+nameif outside
+security-level 0
+ip address dhcp setroute
+no shut
+!
+interface ethernet0/1
+nameif inside
 security-level 100
 ip address dhcp setroute
 no shut
@@ -27,4 +39,3 @@ user-identity default-domain LOCAL
 http 0.0.0.0 0.0.0.0 management
 rest-api image boot:/asa-restapi-132346-lfbff-k8.SPA
 rest-api agent
-

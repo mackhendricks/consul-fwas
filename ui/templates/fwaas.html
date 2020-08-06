@@ -1,0 +1,55 @@
+{% extends 'fullwidth_layout.html' %}
+
+{% block title %}Firewall as a Service (FWaaS){% endblock %}
+
+{% block custom_css %}
+  {{ link_tag('main') }}
+  {{ link_tag('fwaas') }}
+  {{ link_tag('bootstrap-duallistbox') }}
+
+{% endblock %}
+
+{% block body %}
+
+  {% if reloadstatus %}
+
+    <h3>Firewall Rules : {{ reloadstatus }}</h3>
+
+  {% endif %}
+<h1 class="page-header">Firewall as a Service (FWaaS)</h1>
+<!-- Select a partner -->
+<div class="row container">
+  <select class="form-control" id="partner" name="partner" title="partner">
+    <option value="" selected="selected">Select a Partner</option>
+    {% for partner in partners %}
+      <option value="{{ partner }}">{{ partner }} ({{ partners[partner] }})</option>
+    {% endfor %}
+  </select>
+</div>
+<!-- Available Services and Assigned Services -->
+<div class="row container" name='services' id='services'>
+  <!-- Services -->
+   <select multiple="multiple" size="10"  name="consul_services" title="">
+      <option value="partner_payment_status">Partner Payment Status</option>
+      <option value="partner_support_services">Partner Support Services</option>
+      <option value="partner_vehicle_inventory">Vehicle Inventory</option>
+   </select>
+	<div class="col-xs-6">
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+ {{ script_tag('jquery.bootstrap-duallistbox') }}
+ {{ script_tag('fwaas') }}
+
+<script>
+  $('select[name="consul_services"]').bootstrapDualListbox({
+    nonSelectedListLabel: 'Available Services',
+    selectedListLabel: 'Assigned Services',
+    moveOnSelect: true
+  });
+</script>
+
+
+{% endblock %}

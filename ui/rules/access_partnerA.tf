@@ -4,7 +4,13 @@ resource "ciscoasa_access_in_rules" "access_partnerA" {
   rule {
     source              = "124.234.24.2/32"
     destination         = "127.0.0.1/32"
-    destination_service = "tcp/443"
+    destination_service = "tcp/9090"
+  }
+  
+  rule {
+    source              = "124.234.24.2/32"
+    destination         = "127.0.0.1/32"
+    destination_service = "tcp/0"
   }
   
 }
