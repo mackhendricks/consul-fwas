@@ -20,7 +20,12 @@ def index():
    # services = getConsulServices("partnerA")
     partners = getPartnerInfo()
     pprint.pprint(partners)
-    #addPartnerAccess("service2",["access_partnerA"])
+    registerDefaultServices()
+    addPartnerAccess("service2","access_partnerA")
+    addPartnerAccess("service2","access_partnerB")
+    addPartnerAccess("service2","access_partnerC")
+    tags = getConsulServiceTags("service2")
+    pprint.pprint(tags)
     #generateAccessRules("partnerA")
     all_services = getConsulServices()
     pprint.pprint(all_services)
@@ -64,6 +69,34 @@ def initApp(flask_app):
 def teardown():
     pass
 
+
+def registerDefaultServices():
+
+    defaultServices = settings.DEFAULT_CONSUL_SERVICES
+
+    for service in defaultServices:
+        registerService(service)
+
+
+def getConsulServiceTags(service):
+    """ Returns a list of tags for a service. """
+    try:
+        c = consul.Consul(host=settings.CONSUL_HOST,port=settings.CONSUL_PORT)
+        if c is not None:
+            services = c.catalog.services()
+            if services is not None:
+                
+                # Delete consul service from the services list
+                del services[1]['consul']
+                
+                # Filter on the partner name
+                #service = {k: v for (k, v) in services[1].items() if service in k}
+
+            return services[1][service]
+    except consul.ConsulException as ex:
+        print(ex)
+
+
 def getConsulServices(partner=None):
     """ Returns a list of services. Only returns the services assigned to a partner if the partner name is provided """
     try:
@@ -104,12 +137,32 @@ def getPartnerInfo():
 
     return settings.PARTNERS
 
+def registerService(service_name):
+    
+        c = consul.Consul(host=settings.CONSUL_HOST,port=settings.CONSUL_PORT)
+        c.agent.service.register(service_name)
 
 def addPartnerAccess(service_name, partner_name):
     """ Grant partner access to a service """
 
     c = consul.Consul(host=settings.CONSUL_HOST,port=settings.CONSUL_PORT)
-    c.agent.service.register(service_name, tags=partner_name)
+    
+    # Get Existing Tags
+    currentTags = getConsulServiceTags(service_name)
+    pprint.pprint(currentTags)
+    if currentTags is not None:
+        # Return if partner is already in the current tags
+        for tag in currentTags:
+            pprint.pprint(tag)
+            pprint.pprint(str(partner_name).strip('[]').strip('\"'))
+            if tag == str(partner_name):
+                return
+        currentTags.append(partner_name)
+        newTags = currentTags
+        pprint.pprint(newTags)
+        c.agent.service.register(service_name, tags=newTags)
+    else:
+        c.agent.service.register(service_name, tags=list(partner_name))
 
 def getPartnerIP(partner_name):
     """ Return the IP address of the partner """
