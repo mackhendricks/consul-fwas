@@ -5,3 +5,4 @@ PyMySQL
 requests
 SQLAlchemy
 Werkzeug
+python-terraform

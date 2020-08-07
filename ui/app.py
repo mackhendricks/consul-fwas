@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, abort, flash,jsonif
 from flask_script import Manager, Server
 import settings, pprint, os
 import consul
+from python-terraform import *
 
 app = Flask(__name__, static_folder="./static", static_url_path="/static")
 
@@ -21,11 +22,7 @@ def index():
     partners = getPartnerInfo()
     pprint.pprint(partners)
     registerDefaultServices()
-    addPartnerAccess("service2","access_partnerA")
-    addPartnerAccess("service2","access_partnerB")
-    addPartnerAccess("service2","access_partnerC")
-    tags = getConsulServiceTags("service2")
-    pprint.pprint(tags)
+    addPartnerAccess("Parts List","Acme")
     #generateAccessRules("partnerA")
     all_services = getConsulServices()
     pprint.pprint(all_services)
@@ -56,7 +53,7 @@ def deploy():
 
         # Deploy access rules if partners exists
         #if partners is not None:
-        #    deployAccessRules():
+        deployAccessRules():
 
         response_payload['status'] = 1
         return jsonify(response_payload), 200
@@ -234,8 +231,12 @@ def generateAccessRules(partner_name = None):
 
 def deployAccessRules():
     """ Will use terraform to deploy the access rules """
+    tf = Terraform(working_dir=settings.TF_RULE_DIR)
 
-
+    tf.init()
+    tf.plan()
+    return_code, stdout, stderr = tf.apply(skip_plan=True)
+    pprint.pprint(stderr)
 
 if __name__ == "__main__":
     try:

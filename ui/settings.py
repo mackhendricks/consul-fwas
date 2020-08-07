@@ -1,7 +1,7 @@
 
 # List of Partner
 
-PARTNERS={'Acme':'208.42.20.24','HBCU':'23.24.22.24','partnerA':'124.234.24.2', 'partnerB':'13.13.134.2'}
+PARTNERS={'Acme':'98.209.240.245','HBCU':'23.24.22.24','partnerA':'124.234.24.2', 'partnerB':'13.13.134.2'}
 DEFAULT_CONSUL_SERVICES={'Partner Purchasing Portal','Supplier Shipment Status','Parts List'}
 
 # Debugger
