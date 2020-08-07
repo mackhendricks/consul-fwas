@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, abort, flash,jsonif
 from flask_script import Manager, Server
 import settings, pprint, os
 import consul
-from python-terraform import *
+from python_terraform import *
 
 app = Flask(__name__, static_folder="./static", static_url_path="/static")
 
@@ -53,7 +53,7 @@ def deploy():
 
         # Deploy access rules if partners exists
         #if partners is not None:
-        deployAccessRules():
+        deployAccessRules()
 
         response_payload['status'] = 1
         return jsonify(response_payload), 200
