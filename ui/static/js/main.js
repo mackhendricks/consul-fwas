@@ -337,7 +337,7 @@ function reloadkamrequired() {
 
 }
 
-function reloadkam(elmnt) {
+function deployRules(elmnt) {
   //elmnt.style.backgroundColor = "red";
   //elmnt.style.borderColor = "red"
   var msg_bar = $(".message-bar");
@@ -346,18 +346,18 @@ function reloadkam(elmnt) {
 
   $.ajax({
     type: "GET",
-    url: "/reloadkam",
+    url: "/deploy",
     dataType: "json",
     success: function(msg) {
       if (msg.status === 1) {
         msg_bar.addClass("alert alert-success");
-        msg_bar.html("<strong>Success!</strong> Kamailio was reloaded successfully!");
+        msg_bar.html("<strong>Success!</strong> Deployment was successful!");
         reload_button.removeClass('btn-warning');
         reload_button.addClass('btn-primary');
       }
       else {
         msg_bar.addClass("alert alert-danger");
-        msg_bar.html("<strong>Failed!</strong> Kamailio was NOT reloaded successfully!");
+        msg_bar.html("<strong>Failed!</strong> Deployment was NOT successful!");
       }
 
       msg_bar.show();

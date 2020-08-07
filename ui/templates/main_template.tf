@@ -1,5 +1,5 @@
 provider "ciscoasa" {
-  api_url       = "https://3.221.247.210"
+  api_url       = "https://{{ asa_host }}"
   username      = "api"
   password      = "cisco"
   ssl_no_verify = true

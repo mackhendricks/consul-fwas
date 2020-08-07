@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, abort, flash
+from flask import Flask, render_template, request, redirect, abort, flash,jsonify
 from flask_script import Manager, Server
 import settings, pprint, os
 import consul
@@ -31,6 +31,41 @@ def index():
     pprint.pprint(all_services)
     return render_template('fwaas.html', partners=settings.PARTNERS,available_services=all_services)
 
+@app.route('/assignService')
+def assignService():
+
+    # Covert JSON message to Dictionary Object
+    request_payload = getRequestData()
+
+    partner = request_payload['partner']
+    service = request_payload['service']
+
+    addPartnerAccess("service","access_{}".format(partner))
+
+@app.route('/deploy')
+def deploy():
+
+    response_payload = {}
+
+    try:
+        # Generate all access rules
+        partners=settings.PARTNERS
+
+        for partner in partners:
+            generateAccessRules(partner)
+
+        # Deploy access rules if partners exists
+        #if partners is not None:
+        #    deployAccessRules():
+
+        response_payload['status'] = 1
+        return jsonify(response_payload), 200
+    
+    except Exception as ex:
+        print(ex)
+        response_payload['status'] = 0
+        return jsonify(response_payload), 400
+
 def imgFilter(name):
     images_url = urllib.parse.urljoin(app.static_url_path, 'images')
     search_path = os.path.join(app.static_folder, 'images', name)
@@ -49,6 +84,7 @@ def initApp(flask_app):
         flask_app.jinja_env.filters["imgFilter"] = imgFilter
 
         # Overvide settings if Environment settings are defined
+        settings.ASA_HOST = os.getenv('ASA_HOST', settings.CONSUL_HOST)
         settings.CONSUL_HOST = os.getenv('CONSUL_HOST', settings.CONSUL_HOST)
         settings.CONSUL_PORT = os.getenv('CONSUL_PORT', settings.CONSUL_PORT)
         settings.APP_HOST = os.getenv('APP_HOST', settings.APP_HOST)
@@ -171,6 +207,14 @@ def getPartnerIP(partner_name):
 def generateAccessRules(partner_name = None):
     """ Will generate terraform access rules for each partner """
 
+    # Generate the main.tf file
+    
+    content = render_template('main_template.tf', asa_host=settings.ASA_HOST)
+    filename = "{}/main.tf".format(settings.TF_RULE_DIR,partner_name)
+    file = open(filename, 'w+')
+    file.write(content)
+    file.close()
+
     partner_services = getConsulServices(partner_name)
     rules = []
     for service in partner_services:
@@ -182,9 +226,9 @@ def generateAccessRules(partner_name = None):
             rule["service_port"] = node["port"]
             rules.append(rule)
 
-        content = render_template('access_rule.tf', rules=rules,interface="management",partner_name=rule["partner_name"])
+        content = render_template('access_rule_template.tf', rules=rules,interface="management",partner_name=rule["partner_name"])
         filename = "{}/access_{}.tf".format(settings.TF_RULE_DIR,partner_name)
-        file = open(filename, 'w')
+        file = open(filename, 'w+')
         file.write(content)
         file.close()
 
