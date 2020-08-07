@@ -26,6 +26,7 @@ data "template_file" "consul_faas_config" {
 
   vars = {
     userdata_consul_faas_mgmt_IP= "${var.consul_faas_mgmt_IP}"
+    userdata_asa_host_IP = "${aws_eip.Management-EIP.public_ip}"    
   }
 
 }

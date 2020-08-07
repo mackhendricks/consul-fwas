@@ -8,6 +8,7 @@ runcmd:
 - unzip -d /usr/local/bin consul*
 - nohup consul agent -dev -client=${userdata_consul_faas_mgmt_IP} &
 - cd /opt
-- git clone https://github.com/mackhendricks/terraform-aws-asav faas 
+- git clone https://github.com/mackhendricks/consul-fwas faas 
 - cd faas/ui
-- CONSUL_HOST=${userdata_consul_faas_mgmt_IP} APP_HOST=${userdata_consul_faas_mgmt_IP} nohup ./deploy.sh &
+- CONSUL_HOST=${userdata_consul_faas_mgmt_IP} APP_HOST=${userdata_consul_faas_mgmt_IP} ASA_HOST=${userdata_asa_host_IP} nohup ./deploy.sh &
+

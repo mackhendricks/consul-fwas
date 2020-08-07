@@ -56,6 +56,11 @@ resource "aws_eip_association" "Outside-EIP-Association" {
 data "template_file" "asa_config" {
   template = "${file("./templates/asa_config.tpl")}"
 
+  vars = {
+    userdata_owner = "${var.owner}"
+
+  }
+
 }
 
 resource "aws_instance" "ASAv" {
@@ -85,4 +90,3 @@ resource "aws_instance" "ASAv" {
 
 
 }
-
