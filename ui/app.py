@@ -17,13 +17,14 @@ class CustomServer(Server):
 
 @app.route('/')
 def index():
-    services = getConsulServices("partnerA")
-    pprint.pprint(services)
+   # services = getConsulServices("partnerA")
     partners = getPartnerInfo()
     pprint.pprint(partners)
-    addPartnerAccess("service2",["access_partnerA"])
-    generateAccessRules("partnerA")
-    return render_template('fwaas.html', partners=settings.PARTNERS)
+    #addPartnerAccess("service2",["access_partnerA"])
+    #generateAccessRules("partnerA")
+    all_services = getConsulServices()
+    pprint.pprint(all_services)
+    return render_template('fwaas.html', partners=settings.PARTNERS,available_services=all_services)
 
 def imgFilter(name):
     images_url = urllib.parse.urljoin(app.static_url_path, 'images')
@@ -73,6 +74,10 @@ def getConsulServices(partner=None):
                 # Filter on the partner name
                 services = {k: v for (k, v) in services[1].items() if "access_{}".format(partner) in v}
                 return services
+
+            # Delete consul service from the services list
+            del services[1]['consul']
+
             return services[1]
     except consul.ConsulException as ex:
         print(ex)

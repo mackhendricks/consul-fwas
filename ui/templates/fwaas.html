@@ -30,9 +30,10 @@
 <div class="row container" name='services' id='services'>
   <!-- Services -->
    <select multiple="multiple" size="10"  name="consul_services" title="">
-      <option value="partner_payment_status">Partner Payment Status</option>
-      <option value="partner_support_services">Partner Support Services</option>
-      <option value="partner_vehicle_inventory">Vehicle Inventory</option>
+    {% for service in available_services %}
+      <option value="{{ service }}">{{ service }}</option>
+    {% endfor %}
+
    </select>
 	<div class="col-xs-6">
   </div>
