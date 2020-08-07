@@ -22,7 +22,7 @@ def index():
     partners = getPartnerInfo()
     pprint.pprint(partners)
     registerDefaultServices()
-    addPartnerAccess("Parts List","Acme")
+    addPartnerAccess("Parts List","access_Acme")
     #generateAccessRules("partnerA")
     all_services = getConsulServices()
     pprint.pprint(all_services)
@@ -37,7 +37,7 @@ def assignService():
     partner = request_payload['partner']
     service = request_payload['service']
 
-    addPartnerAccess("service","access_{}".format(partner))
+    addPartnerAccess(service,"access_{}".format(partner))
 
 @app.route('/deploy')
 def deploy():
